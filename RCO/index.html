@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Central de Segurança</title>
+    <link rel="stylesheet" href="mobile/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="mobile/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="mobile/css/style2.css" />
+
+    <!-- Include the Material UI theme -->
+    <link
+      rel="stylesheet"
+      href="node_modules/@sweetalert2/theme-material-ui/material-ui.css"
+    />
+
+    <script src="node_modules/sweetalert2/dist/sweetalert2.min.js"></script>
+
+    <link
+      rel="icon"
+      href="https://auth-cs.identidadedigital.pr.gov.br/centralautenticacao/images/icon-centralseguranca.png"
+    />
+    <style></style>
+  </head>
+  <body id="login">
+    <div class="app-grid">
+      <div id="navbar"></div>
+      <div id="main">
+        <div class="content noselect">
+          <div class="m-3">
+            <!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx -->
+
+            <form
+              name="formBase"
+              id="formGeral"
+              action="api/v1/authorize"
+              method="post"
+              onsubmit="return validarForm(this);"
+              accept-charset="iso-8859-1"
+              enctype="application/x-www-form-urlencoded"
+            >
+              <input type="hidden" name="paginaLogin" id="paginaLogin" />
+              <input
+                type="hidden"
+                name="provedorselecionado"
+                id="provedorselecionado"
+              />
+              <input
+                type="hidden"
+                name="origemRequisicao"
+                id="origemRequisicao"
+              />
+              <input type="hidden" name="valorCPF" id="valorCPF" />
+              <input type="hidden" name="urlLogo" id="urlLogo" />
+              <input type="hidden" name="loginPadrao" id="loginPadrao" />
+              <input
+                type="hidden"
+                name="modulosDeAutenticacao"
+                id="modulosDeAutenticacao"
+              />
+              <input type="hidden" name="labelCentral" id="labelCentral" />
+              <input type="hidden" name="moduloAtual" id="moduloAtual" />
+              <input type="hidden" name="dataAcesso" id="acesso" />
+              <input
+                type="hidden"
+                name="exibirLinkAutoCadastro"
+                id="exibirLinkAutoCadastro"
+              />
+              <input
+                type="hidden"
+                name="exibirLinkAutoCadastroCertificado"
+                id="exibirLinkAutoCadastroCertificado"
+              />
+              <input
+                type="hidden"
+                name="exibirLinkRecuperarSenha"
+                id="exibirLinkRecuperarSenha"
+              />
+              <input
+                type="hidden"
+                name="formaAutenticacao"
+                id="formaAutenticacao"
+              />
+              <input type="hidden" name="response_type" id="response_type" />
+              <input type="hidden" name="client_id" id="client_id" />
+              <input type="hidden" name="redirect_uri" id="redirect_uri" />
+              <input type="hidden" name="scope" id="scope" />
+              <input type="hidden" name="state" id="state" />
+              <input type="hidden" name="mensagem" id="mensagem" />
+              <input type="hidden" name="dnsCidadao" id="dnsCidadao" />
+              <input type="hidden" name="provedores" id="provedores" />
+              <input type="hidden" name="provedor" id="provedor" />
+              <input type="hidden" name="tokenFormat" id="tokenFormat" />
+              <input type="hidden" name="code_challenge" id="code_challenge" />
+              <input
+                type="hidden"
+                name="code_challenge_method"
+                id="code_challenge_method"
+              />
+              <input type="hidden" name="captcha" id="captcha" />
+              <input type="hidden" name="codCaptcha" id="codCaptcha" />
+              <input type="hidden" name="attribute" id="attribute" />
+
+              <!-- fim lista campos que se repetem -->
+
+              <div
+                id="msgWarn"
+                class="alert alert-warning alert-dismissible fade show"
+                role="alert"
+                style="display: none"
+              >
+                <span id="mensagemServidor"></span>
+
+                <!--  
+                    controle para fechar a div teve que ser feito por javascript, a opção data-dismiss 
+                    retirava o objeto da página invés de escondê-lo, dessa forma não apresentava mais
+                    as mensagens de erro pois executava msgWarn.show em um objeto que não existe
+                -->
+                <button
+                  type="button"
+                  class="close"
+                  aria-label="Fechar"
+                  id="btnFecharMensagem"
+                >
+                  <span>×</span>
+                </button>
+              </div>
+
+              <div id="div-inicial" style="display: block">
+                <h1>
+                  <div class="text-center box-logo">
+                    <img
+                      id="imgUrlLogo"
+                      class="logo-aplicacao"
+                      style="max-width: 250px; max-height: 250px"
+                      alt="imagem de identificação do sistema"
+                      aria-hidden="true"
+                      src="https://www.registrodeclasse.seed.pr.gov.br/rcdig/images/logo_sistema.png"
+                    />
+                  </div>
+                </h1>
+
+                <div id="box-botoes" class="scroll-v">
+                  <h2 class="tit-opcoes-login">Opções de login</h2>
+                  <!--xxxxxxxxxxxxxxxxxxxx BOTÃO CENTRAL DE SEGURANÇA   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+                  <button
+                    type="button"
+                    id="btnCentral"
+                    class="btn btn-lg btn-secondary btn-opcoes btn-block rounded-pill"
+                  >
+                    <svg version="1.1" viewBox="0 0 32 32">
+                      <style type="text/css">
+                        .st0-centralseg {
+                          fill: url(#SVGID_1_);
+                        }
+                        .st1-centralseg {
+                          fill: url(#SVGID_2_);
+                        }
+                        .st2-centralseg {
+                          fill: url(#SVGID_3_);
+                        }
+                        .st3-centralseg {
+                          fill: url(#SVGID_4_);
+                        }
+                        .st4-centralseg {
+                          fill: url(#SVGID_5_);
+                        }
+                      </style>
+                      <linearGradient
+                        id="SVGID_1_"
+                        gradientUnits="userSpaceOnUse"
+                        x1="1.9901"
+                        y1="28.8234"
+                        x2="28.4901"
+                        y2="2.49"
+                      >
+                        <stop offset="0" style="stop-color: #70be44" />
+                        <stop offset="0.9965" style="stop-color: #9acb3b" />
+                      </linearGradient>
+                      <path
+                        class="st0-centralseg"
+                        d="M13.8,25.4H5.5v-8.3c0-0.7-0.6-1.3-1.3-1.3H1.9c-0.7,0-1.3,0.6-1.3,1.3v8.3V29c0,0.7,0.6,1.3,1.3,1.3h3.5l0,0
+                        h8.3c0.7,0,1.3-0.6,1.3-1.3v-2.3C15,25.9,14.5,25.4,13.8,25.4z M15.9,6.6h8.3v8.3c0,0.7,0.6,1.3,1.3,1.3h2.3c0.7,0,1.3-0.6,1.3-1.3
+                        V6.6V3.1c0-0.7-0.6-1.3-1.3-1.3H16c-0.7,0-1.3,0.6-1.3,1.3v2.3C14.6,6.1,15.2,6.6,15.9,6.6z"
+                      />
+                      <g>
+                        <linearGradient
+                          id="SVGID_2_"
+                          gradientUnits="userSpaceOnUse"
+                          x1="8.6248"
+                          y1="12.8752"
+                          x2="26.9297"
+                          y2="31.1801"
+                        >
+                          <stop offset="0" style="stop-color: #0b84a9" />
+                          <stop offset="0.9965" style="stop-color: #20abc5" />
+                        </linearGradient>
+                        <polygon
+                          class="st1-centralseg"
+                          points="23.1,28.7 24.5,27.3 25.9,28.7 24.5,30.2 	"
+                        />
+                        <linearGradient
+                          id="SVGID_3_"
+                          gradientUnits="userSpaceOnUse"
+                          x1="11.4768"
+                          y1="10.0232"
+                          x2="29.7817"
+                          y2="28.3281"
+                        >
+                          <stop offset="0" style="stop-color: #0b84a9" />
+                          <stop offset="0.9965" style="stop-color: #20abc5" />
+                        </linearGradient>
+                        <polygon
+                          class="st2-centralseg"
+                          points="28.8,28.7 30.2,27.3 31.6,28.7 30.2,30.2 	"
+                        />
+                        <linearGradient
+                          id="SVGID_4_"
+                          gradientUnits="userSpaceOnUse"
+                          x1="10.0858"
+                          y1="11.4142"
+                          x2="28.3907"
+                          y2="29.7191"
+                        >
+                          <stop offset="0" style="stop-color: #0b84a9" />
+                          <stop offset="0.9965" style="stop-color: #20abc5" />
+                        </linearGradient>
+                        <polygon
+                          class="st3-centralseg"
+                          points="26,28.7 27.4,27.3 28.8,28.7 27.4,30.1 	"
+                        />
+                        <linearGradient
+                          id="SVGID_5_"
+                          gradientUnits="userSpaceOnUse"
+                          x1="10.175"
+                          y1="11.325"
+                          x2="28.4799"
+                          y2="29.6299"
+                        >
+                          <stop offset="0" style="stop-color: #0b84a9" />
+                          <stop offset="0.9965" style="stop-color: #20abc5" />
+                        </linearGradient>
+                        <path
+                          class="st4-centralseg"
+                          d="M27.4,27.3l1.4-1.4l-7.5-7.5c0.3-0.7,0.4-1.5,0.4-2.4c0-3.8-3.1-6.9-6.9-6.9S8,12.2,8,16s3.1,6.9,6.9,6.9
+                          c0.7,0,1.4-0.1,2.1-0.3l1.9,1.9l1.4-1.4l1.4,1.4l1.4-1.4l1.4,1.4l-1.4,1.4l1.4,1.4l1.4-1.4L27.4,27.3z M14.8,19.3
+                          c-1.9,0-3.4-1.5-3.4-3.4s1.5-3.4,3.4-3.4s3.4,1.5,3.4,3.4C18.2,17.8,16.7,19.3,14.8,19.3z"
+                        />
+                      </g>
+                    </svg>
+
+                    Central de Segurança
+                  </button>
+
+                  <!--xxxxxxxxxxxxxxxxxxxx BOTÃO SMS   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx                      					 -->
+                  <button
+                    type="button"
+                    id="btnSms"
+                    class="btn btn-lg btn-secondary btn-opcoes btn-block rounded-pill"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24.77 24.77"
+                    >
+                      <path
+                        d="M24.77,6.555H16.376V2.177A2.179,2.179,0,0,0,14.2,0H2.177A2.179,2.179,0,0,0,0,2.177V22.593A2.179,2.179,0,0,0,2.177,24.77H14.2a2.179,2.179,0,0,0,2.177-2.177V18.214H24.77ZM2.177,1.451H14.2a.726.726,0,0,1,.726.726V2.9H1.451V2.177A.726.726,0,0,1,2.177,1.451ZM14.2,23.318H2.177a.726.726,0,0,1-.726-.726v-.726H14.925v.726A.726.726,0,0,1,14.2,23.318Zm.726-2.9H1.451V4.354H14.925v2.2H5.805v4.154L2.9,12.385l2.9,1.676v4.154h9.119Zm8.394-3.653H7.257v-3.54l-1.451-.838,1.451-.838V8.007H23.318Z"
+                      />
+                    </svg>
+
+                    Usar meu nº de celular
+                  </button>
+
+                  <!--xxxxxxxxxxxxxxxxxxxx BOTÃO EXPRESSO   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+                  <button
+                    type="button"
+                    id="btnExpresso"
+                    class="btn btn-lg btn-secondary btn-opcoes btn-block rounded-pill"
+                  >
+                    <!--               <img src="images/icon-expresso.svg" class="button-icon" /> -->
+                    <svg
+                      viewBox="0 0 32 32"
+                      style="enable-background: new 0 0 32 32"
+                    >
+                      <style type="text/css">
+                        .st0-expresso {
+                          fill: #013364;
+                        }
+                      </style>
+                      <g>
+                        <path
+                          class="st0-expresso"
+                          d="M2.9,24.9c0,0-3.7-4.5,3-12.6c6.8-8.3,17.8-8.9,17.8-8.9s-11.1-0.7-19.1,8C-2.4,19.2,2.9,24.9,2.9,24.9z"
+                        />
+                        <circle
+                          class="st0-expresso"
+                          cx="4.1"
+                          cy="25.8"
+                          r="1.7"
+                        />
+                        <g>
+                          <path
+                            class="st0-expresso"
+                            d="M27.2,8H12.5c-1.1,0.7-2.3,1.4-3.4,2.3l7.7,5.7l11.4-6.9l-11.6,8.7L9,10.5c-0.8,0.6-1.4,1.2-2.1,1.9    c-0.5,0.5-0.9,1-1.3,1.5L4.9,21c-0.1,1.2,0.8,2.2,2,2.2H26c1.2,0,2.3-0.9,2.3-2.2l0.9-10.8C29.2,9,28.4,8,27.2,8z"
+                          />
+                        </g>
+                        <path
+                          class="st0-expresso"
+                          d="M29.8,10.1c0,0,1.5,3.9-1.4,9.4c-2.7,5.3-9.4,9.1-9.4,9.1s6.9-2.5,10.3-8.3S29.8,10.1,29.8,10.1z"
+                        />
+                      </g>
+                    </svg>
+
+                    Expresso
+                  </button>
+                  <hr class="my-4" />
+                </div>
+              </div>
+
+              <!-- fim da div-inicial -->
+
+              <!-- xxxxxxxxxxxxxxxxxxxxxxxx PAINEL CENTRAL DE SEGURANÇA xxxxxxxxxxxxxxxxxxxxxxxxxx-->
+              <div id="div-usuarioSenha" style="display: none">
+                <div class="box-info">
+                  <h2>Central de Segurança</h2>
+                </div>
+                <div class="m-3">
+                  <div class="form-group">
+                    <label for="attribute_central" id="lblCentral"
+                      >CPF, E-Mail ou Login Sentinela</label
+                    >
+                    <input
+                      class="form-control"
+                      name="attribute_central"
+                      id="attribute_central"
+                      maxlength="100"
+                      type="text"
+                      onchange="this.value = this.value.trim()"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="password">Senha</label>
+                    <div class="input-group">
+                      <input
+                        class="form-control"
+                        name="password"
+                        id="password"
+                        type="password"
+                        aria-describedby="icone-senha"
+                      />
+                      <span class="input-group-text" id="icone-senha">
+                        <i class="fas fa-eye-slash" id="eyeSenha"></i>
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- inclusão captcha central -->
+                  <div class="form-group" id="divCaptchaCentral">
+                    <label for="captchaCentral">Digite o texto da imagem</label>
+                    <input
+                      class="form-control"
+                      name="captchaCentral"
+                      id="captchaCentral"
+                      maxlength="6"
+                      type="text"
+                      ondrop="return false"
+                      onchange="this.value = this.value.trim()"
+                    />
+                    <br />
+                    <div align="center">
+                      <img
+                        src=""
+                        id="imgCaptchaCentral"
+                        style="border-radius: 10px"
+                      />
+                      <br />
+                      <a href="#" id="linkNovaImagemCentral">nova imagem</a>
+                    </div>
+                    <hr />
+                  </div>
+                  <!--  fim do captcha central-->
+                  <div class="box-nav form-rowx">
+                    <button
+                      id="btn-central-acessar"
+                      type="button"
+                      class="btn btn-lg btn-primary btn-block rounded-pill"
+                    >
+                      Entrar
+                    </button>
+
+                    <button
+                      id="botao-voltarCentral"
+                      type="button"
+                      class="btn btn-lg btn-primary btn-block rounded-pill"
+                    >
+                      Voltar
+                    </button>
+
+                    <button
+                      id="btn-usuariosenha-voltar"
+                      type="button"
+                      class="btn-voltar"
+                    >
+                      <i class="fas fa-angle-left"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- SMS  TELEFONE CELULAR ============================================= -->
+              <div id="div-telefone" style="display: none">
+                <div id="tabSms">
+                  <div class="box-info">
+                    <h2>Qual é o número do seu celular?</h2>
+                    <p class="text-left">
+                      Você receberá um código por SMS, para confirmar o número
+                      do seu celular.
+                    </p>
+                  </div>
+                  <div class="m-3">
+                    <div class="form-group">
+                      <label for="attribute_Sms">CPF</label>
+                      <input
+                        class="form-control"
+                        name="attribute_Sms"
+                        id="attribute_Sms"
+                        maxlength="11"
+                        type="text"
+                        onpaste="return false"
+                        ondrop="return false"
+                        onchange="this.value = this.value.trim()"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="celular"
+                        >Informe os 4 últimos dígitos do celular</label
+                      >
+                      <input
+                        class="form-control"
+                        name="celular"
+                        id="celular"
+                        maxlength="4"
+                        type="text"
+                      />
+                    </div>
+
+                    <!-- inclusão captcha SMS -->
+                    <div class="form-group" id="divCaptchaSms">
+                      <label for="captchaSms">Digite o texto da imagem</label>
+                      <input
+                        class="form-control"
+                        name="captchaSms"
+                        id="captchaSms"
+                        maxlength="6"
+                        type="text"
+                        ondrop="return false"
+                        onchange="this.value = this.value.trim()"
+                      />
+                      <br />
+                      <div align="center">
+                        <img
+                          src=""
+                          id="imgCaptchaSms"
+                          style="border-radius: 10px"
+                        />
+                        <br />
+                        <a href="#" id="linkNovaImagemSms">nova imagem</a>
+                      </div>
+                      <hr />
+                    </div>
+                    <!--  fim do captcha SMS-->
+
+                    <div class="box-nav form-rowx">
+                      <button
+                        id="enviarSms"
+                        type="button"
+                        class="btn btn-lg btn-primary btn-block rounded-pill"
+                      >
+                        Enviar SMS
+                      </button>
+
+                      <button
+                        id="botao-voltarSms"
+                        type="button"
+                        class="btn btn-lg btn-primary btn-block rounded-pill"
+                      >
+                        Voltar
+                      </button>
+
+                      <button
+                        id="btn-telefone-voltar"
+                        type="button"
+                        class="btn-voltar"
+                      >
+                        <i class="fas fa-angle-left"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- TELEFONE PIN =========================================== -->
+              <div id="div-telefonePin" style="display: none">
+                <div class="box-info">
+                  <h2>Código de Segurança</h2>
+                  <p>Informe o código recebido no celular</p>
+                </div>
+
+                <div class="m-3">
+                  <div class="form-group">
+                    <div class="col">
+                      <input
+                        class="form-control"
+                        name="codigoSeguranca"
+                        id="codigoSeguranca"
+                        type="text"
+                        maxlength="6"
+                      />
+                    </div>
+                    <div class="my-2 text-center">
+                      <a href="#" id="linkNaoRecebiCodigoSms"
+                        >Não recebi o código</a
+                      >
+                    </div>
+                    <div class="box-nav form-rowx">
+                      <button
+                        id="confirmarCodigoSms"
+                        type="button"
+                        class="btn btn-lg btn-primary btn-block rounded-pill"
+                      >
+                        Confirmar
+                      </button>
+                      <button
+                        id="btn-telefonepin-voltar"
+                        type="button"
+                        class="btn-voltar"
+                      >
+                        <i class="fas fa-angle-left"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--xxxxxxxxxxxxxxxxxxxx  PAINEL TOKEN xxxxxxxxxxxxxxxxxxxxxxxxxx-->
+              <div id="div-token" style="display: none">
+                <div class="box-info">
+                  <h2>Token PIÁ (aplicativo)</h2>
+                </div>
+                <div class="m-3">
+                  <div class="form-group">
+                    <label for="attribute_token">CPF</label>
+                    <input
+                      class="form-control"
+                      name="attribute_token"
+                      id="attribute_token"
+                      maxlength="11"
+                      type="text"
+                      onpaste="return false"
+                      ondrop="return false"
+                      onchange="this.value = this.value.trim()"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="codigoOTP"
+                      >Informe o código de segurança gerado pelo
+                      aplicativo</label
+                    >
+                    <input
+                      class="form-control"
+                      name="codigoOTP"
+                      id="codigoOTP"
+                      maxlength="6"
+                      type="text"
+                    />
+                  </div>
+                  <div class="box-nav form-rowx">
+                    <button
+                      id="btn-token-acessar"
+                      type="button"
+                      class="btn btn-lg btn-primary btn-block rounded-pill"
+                    >
+                      Entrar
+                    </button>
+
+                    <button
+                      id="botao-voltarOtp"
+                      type="button"
+                      class="btn btn-lg btn-primary btn-block rounded-pill"
+                    >
+                      Voltar
+                    </button>
+
+                    <button
+                      id="btn-token-voltar"
+                      type="button"
+                      class="btn-voltar"
+                    >
+                      <i class="fas fa-angle-left"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!--xxxxxxxxxxxxxxxxxxxx  PAINEL CERTIFICADO DIGITAL xxxxxxxxxxxxxxxxxxxxxxxxxx-->
+              <div id="div-certificado" style="display: none" align="center">
+                <div class="box-info">
+                  <h2>Certificado Digital</h2>
+                </div>
+                <div class="m-3">
+                  <div>
+                    <img
+                      src="images/icon-certificado-64px.png"
+                      alt=""
+                      style="margin-right: 15px"
+                    />
+                    <p class="aviso-cd">
+                      Por favor, verifique se o certificado digital esta
+                      conectado.
+                    </p>
+                  </div>
+                  <div class="box-nav form-rowx">
+                    <button
+                      id="btn-modal-certificado-ok"
+                      type="button"
+                      class="btn btn-lg btn-primary btn-block rounded-pill"
+                    >
+                      Entrar
+                    </button>
+                    <button
+                      id="btn-certificado-voltar"
+                      type="button"
+                      class="btn-voltar"
+                    >
+                      <i class="fas fa-angle-left"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!--xxxxxxxxxxxxxxxxxxxx  PAINEL EXPRESSO xxxxxxxxxxxxxxxxxxxxxxxxxx-->
+              <div id="div-expresso" style="display: none">
+                <div class="box-info">
+                  <h2>Expresso</h2>
+                </div>
+                <div class="m-3">
+                  <div class="form-group">
+                    <label for="attribute_expresso">Login do Expresso</label>
+                    <input
+                      class="form-control"
+                      name="attribute_expresso"
+                      id="attribute_expresso"
+                      maxlength="50"
+                      type="text"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="password_expresso">Senha</label>
+                    <div class="input-group">
+                      <input
+                        class="form-control"
+                        name="password_expresso"
+                        id="password_expresso"
+                        type="password"
+                        aria-describedby="icone-senha"
+                      />
+                      <span class="icone-senha" id="icone-senhaExpresso">
+                        <i class="fas fa-eye-slash" id="eyeSenhaExpresso"></i>
+                      </span>
+                    </div>
+                  </div>
+                  <!-- inclusão captcha Expresso -->
+                  <div class="form-group" id="divCaptchaExpresso">
+                    <label for="captchaExpresso"
+                      >Digite o texto da imagem</label
+                    >
+                    <input
+                      class="form-control"
+                      name="captchaExpresso"
+                      id="captchaExpresso"
+                      maxlength="6"
+                      type="text"
+                      ondrop="return false"
+                      onchange="this.value = this.value.trim()"
+                    />
+                    <br />
+                    <div align="center">
+                      <img
+                        src=""
+                        id="imgCaptchaExpresso"
+                        style="border-radius: 10px"
+                      />
+                      <br />
+                      <a href="#" id="linkNovaImagemExpresso">nova imagem</a>
+                    </div>
+                    <hr />
+                  </div>
+                  <!--  fim do captcha Expresso-->
+
+                  <div class="box-nav form-rowx">
+                    <button
+                      id="btn-expresso-acessar"
+                      type="button"
+                      class="btn btn-lg btn-primary btn-block rounded-pill"
+                    >
+                      Entrar
+                    </button>
+
+                    <button
+                      id="botao-voltarExpresso"
+                      type="button"
+                      class="btn btn-lg btn-primary btn-block rounded-pill"
+                    >
+                      Voltar
+                    </button>
+
+                    <button
+                      id="btn-expresso-voltar"
+                      type="button"
+                      class="btn-voltar"
+                    >
+                      <i class="fas fa-angle-left"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!--xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-->
+              <!--xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-->
+              <!-- a principio modificou o formato, se sim REMOVER -->
+              <!--xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-->
+              <!--xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-->
+
+              <!--xxxxxxxxxxxxxxxxxxxx  PAINEL GOVBR xxxxxxxxxxxxxxxxxxxxxxxxxx-
+              <div id="div-govbr" style="display: none">
+                <div class="box-info">
+                  <h2>Entrar com Gov.br</h2>
+                </div>
+                <div class="m-3">
+	                <div class="text-center">
+	                  <img src="mobile/images/logo-govbr.svg" alt="Govbr" style="margin: 15px" />
+	                </div>
+	                <div class="box-nav form-rowx">
+	                
+	                  <button
+	                    id="btn-govbr-acessar"
+	                    type="submit"
+	                    class="btn btn-lg btn-primary btn-block rounded-pill"
+	                  >
+	                    Entrar
+	                  </button>
+	                  
+	                  <button
+	                    id="botao-voltar"
+	                    type="button"
+	                    class="btn btn-lg btn-primary btn-block rounded-pill"
+	                  >
+	                    Voltar
+	                  </button>
+	                  
+	                  
+	                  <button id="btn-google-voltar" type="button" class="btn-voltar">
+	                    <i class="fas fa-angle-left"></i>
+	                  </button>
+	                </div>
+                </div>
+              </div>
+    
+    -->
+
+              <!--xxxxxxxxxxxxxxxxxxxx  PAINEL GOOGLE xxxxxxxxxxxxxxxxxxxxxxxxxx-->
+              <div id="div-google" style="display: none">
+                <div class="box-info">
+                  <h2>Entrar com Google</h2>
+                </div>
+                <div class="m-3">
+                  <!--                 <div id="divVinculoGoogle" style="display: none"> -->
+                  <!--                   <a -->
+                  <!--                     id="linkVinculoGoogle" -->
+                  <!--                     href="#" -->
+                  <!--                     class="btn btn-primary" -->
+                  <!--                     tabindex="0" -->
+                  <!--                     >Vincular</a -->
+                  <!--                   > -->
+                  <!--                 </div>  -->
+                  <div class="text-center">
+                    <img
+                      src="mobile/images/logo-google.svg"
+                      alt="Google"
+                      style="margin: 15px"
+                      aria-hidden="true"
+                    />
+                  </div>
+                  <div class="box-nav form-rowx">
+                    <button
+                      id="btn-google-acessar"
+                      type="submit"
+                      class="btn btn-lg btn-primary btn-block rounded-pill"
+                    >
+                      Entrar
+                    </button>
+
+                    <button
+                      id="botao-voltarGoogle"
+                      type="button"
+                      class="btn btn-lg btn-primary btn-block rounded-pill"
+                    >
+                      Voltar
+                    </button>
+
+                    <button
+                      id="btn-google-voltar"
+                      type="button"
+                      class="btn-voltar"
+                    >
+                      <i class="fas fa-angle-left"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!--xxxxxxxxxxxxxxxxxxxx  PAINEL FACEBOOK xxxxxxxxxxxxxxxxxxxxxxxxxx
+              <div id="div-facebook" style="display: none" align="center">
+                <div class="box-info">
+                  <h2>Entrar com Facebook</h2>
+                </div>
+                <div class="m-3">
+                <div id="divVinculoFacebook" style="display: none">
+                  <a
+                    id="linkVinculoFacebook"
+                    href="#"
+                    class="btn btn-primary"
+                    tabindex="0"
+                    >Vincular</a
+                  >
+                </div>
+                <img
+                  src="mobile/images/logo-facebook.svg"
+                  alt="Facebook"
+                  style="margin: 15px"
+                />
+                <div class="box-nav form-rowx">
+                  <button
+                    id="btn-facebook-acessar"
+                    type="submit"
+                    class="btn btn-lg btn-primary btn-block rounded-pill"
+                  >
+                    Acessar
+                  </button>
+                  <button id="btn-facebook-voltar" type="button" class="btn-voltar">
+                    <i class="fas fa-angle-left"></i>
+                  </button>
+                </div>
+                </div>
+              </div>
+    
+              <!--xxxxxxxxxxxxxxxxxxxx  PAINEL SANEPAR xxxxxxxxxxxxxxxxxxxxxxxxxx-->
+              <div id="div-sanepar" style="display: none" align="center">
+                <div class="box-info">
+                  <h2>SANEPAR</h2>
+                </div>
+                <div class="m-3">
+                  <img
+                    src="mobile/images/logo-sanepar.svg"
+                    alt="Sanepar"
+                    style="max-width: 280px; margin: 15px 0"
+                    aria-hidden="true"
+                  />
+
+                  <div class="box-nav form-rowx">
+                    <div id="divVinculoSanepar" style="display: none">
+                      <a
+                        id="linkVinculoSanepar"
+                        href="#"
+                        class="btn btn-lg btn-outline-primary btn-block rounded-pill"
+                        tabindex="0"
+                      >
+                        Vincular
+                      </a>
+                    </div>
+
+                    <button
+                      id="btn-sanepar-acessar"
+                      type="submit"
+                      class="btn btn-lg btn-primary btn-block rounded-pill"
+                    >
+                      Entrar
+                    </button>
+
+                    <button
+                      id="botao-voltarSanepar"
+                      type="button"
+                      class="btn btn-lg btn-primary btn-block rounded-pill"
+                    >
+                      Voltar
+                    </button>
+
+                    <button
+                      id="btn-sanepar-voltar"
+                      type="button"
+                      class="btn-voltar"
+                    >
+                      <i class="fas fa-angle-left"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!--xxxxxxxxxxxxxxxxxxxx  PAINEL EMAIL COM TOKEN xxxxxxxxxxxxxxxxxxxxxxxxxx-->
+              <div id="div-emailToken" style="display: none">
+                <div id="tabEmailToken">
+                  <div class="box-info">
+                    <h2>E-mail com código</h2>
+                  </div>
+                  <div class="m-3">
+                    <div class="form-group">
+                      <label for="attribute_emailToken">CPF</label>
+                      <input
+                        class="form-control"
+                        name="attribute_emailToken"
+                        id="attribute_emailToken"
+                        maxlength="11"
+                        size="100"
+                        type="text"
+                        onpaste="return false"
+                        ondrop="return false"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="email">E-mail</label>
+                      <input
+                        class="form-control"
+                        name="email"
+                        id="email"
+                        title="email"
+                        type="text"
+                        maxlength="100"
+                        onpaste="return false"
+                        ondrop="return false"
+                      />
+                    </div>
+                    <!-- inclusão captcha EmailToken -->
+                    <div class="form-group" id="divCaptchaEmailToken">
+                      <label for="captchaEmailToken"
+                        >Digite o texto da imagem</label
+                      >
+                      <input
+                        class="form-control"
+                        name="captchaEmailToken"
+                        id="captchaEmailToken"
+                        maxlength="6"
+                        type="text"
+                        ondrop="return false"
+                        onchange="this.value = this.value.trim()"
+                      />
+                      <br />
+                      <div align="center">
+                        <img
+                          src=""
+                          id="imgCaptchaEmailToken"
+                          style="border-radius: 10px"
+                        />
+                        <br />
+                        <a href="#" id="linkNovaImagemEmailToken"
+                          >nova imagem</a
+                        >
+                      </div>
+                      <hr />
+                    </div>
+                    <!--  fim do captcha EmailToken-->
+
+                    <div class="box-nav form-rowx">
+                      <button
+                        id="enviarTokenEmail"
+                        type="button"
+                        class="btn btn-lg btn-primary btn-block rounded-pill"
+                      >
+                        Enviar E-mail
+                      </button>
+
+                      <button
+                        id="botao-voltarEmailToken"
+                        type="button"
+                        class="btn btn-lg btn-primary btn-block rounded-pill"
+                      >
+                        Voltar
+                      </button>
+                    </div>
+
+                    <button
+                      id="btn-emailToken-voltar"
+                      type="button"
+                      class="btn-voltar"
+                    >
+                      <i class="fas fa-angle-left"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- EMAIL PIN =========================================== -->
+              <div id="div-emailTokenPin" style="display: none">
+                <div class="box-info">
+                  <h2>Código de Segurança</h2>
+                  <p>Informe o código recebido no e-mail</p>
+                </div>
+                <div class="m-3">
+                  <div class="form-group">
+                    <div class="col">
+                      <input
+                        class="form-control"
+                        name="codigoSegurancaEmail"
+                        id="codigoSegurancaEmail"
+                        type="text"
+                        maxlength="6"
+                      />
+                    </div>
+                  </div>
+                  <div class="my-2 text-center">
+                    <a href="#" id="linkNaoRecebiCodigoEmail"
+                      >Não recebi o código</a
+                    >
+                  </div>
+                  <div class="box-nav form-rowx">
+                    <button
+                      id="confirmarTokenEmail"
+                      type="button"
+                      class="btn btn-lg btn-primary btn-block rounded-pill"
+                    >
+                      Confirmar
+                    </button>
+
+                    <button
+                      id="btn-emailTokenPin-voltar"
+                      type="button"
+                      class="btn-voltar"
+                    >
+                      <i class="fas fa-angle-left"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx -->
+          </div>
+        </div>
+        <div id="links" style="display: block">
+          <a
+            id="linkCadastro"
+            href="#"
+            class="btn btn-lg btn-outline-secondary btn-block rounded-pill btn-lg btn-precisa-ajuda"
+          >
+            Ainda não sou cadastrado
+          </a>
+
+          <a
+            id="linkForgotPass"
+            href="javascript: void(0);"
+            class="btn btn-lg btn-outline-secondary btn-block rounded-pill btn-precisa-ajuda"
+          >
+            Recuperar / Alterar Senha
+          </a>
+        </div>
+        <div id="links" style="display: block">
+          <div class="m-3">
+            <p class="aviso-cd">
+              A <b>verificação em duas etapas</b> está disponível. <br />
+              Acesse seu perfil, habilite este recurso e
+              <b>aumente ainda mais a segurança</b> da sua conta.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div id="footer" class="noselect">
+        <img
+          src="https://auth-cs.identidadedigital.pr.gov.br/centralautenticacao/mobile/images/icon-color-centralseguranca.svg    "
+          alt=""
+          class="logo-central"
+          aria-hidden="true"
+        />
+        <div class="footer-titulo">
+          Central de Segurança <br />
+          Governo do Paraná
+        </div>
+        <a href="http://www.celepar.pr.gov.br/">
+          <img
+            src="https://auth-cs.identidadedigital.pr.gov.br/centralautenticacao/images/logo-celepar-v2.svg"
+            alt="Celepar"
+            class="logo-celepar"
+          />
+        </a>
+      </div>
+    </div>
+
+    <script src="mobile/js/jquery-3.6.0.min.js"></script>
+    <script src="mobile/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="js/appNovoLogin22.js"></script>
+
+    <script>
+      let btns = document.querySelectorAll("button");
+      let cadastro = document.getElementById("linkCadastro");
+      let password = document.getElementById("linkForgotPass");
+
+      executaError = (el) => {
+        el.onclick = () => {
+          Swal.fire({
+            icon: "error",
+            title: "Serviço Indisponível",
+            text: "Atualmente, estamos enfrentando uma alta demanda e o serviço está temporariamente indisponível.Tente novamente mais tarde.",
+    
+          });
+        };
+      };
+
+      btns.forEach((element) => {
+        executaError(element);
+        executaError(cadastro);
+        executaError(password);
+      });
+    </script>
+  </body>
+</html>
